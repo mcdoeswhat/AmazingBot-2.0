@@ -57,7 +57,6 @@ public class OnBind implements Listener {
                     return;
                 }
             }
-
             String user = e.getMessage().substring(5);
             Long userID = binds.get(uuid);
             if (!user.equalsIgnoreCase(String.valueOf(userID))){

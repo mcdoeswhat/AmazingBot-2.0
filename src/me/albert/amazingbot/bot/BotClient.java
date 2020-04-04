@@ -38,7 +38,14 @@ public class BotClient extends WebSocketClient {
     @Override
     public void onMessage( String message ) {
         MessageReceiveEvent event = new MessageReceiveEvent(message);
+        if (AmazingBot.getInstance().getConfig().getBoolean("async")){
         Bukkit.getServer().getPluginManager().callEvent(event);
+        return;
+        }
+        Bukkit.getScheduler().runTask(AmazingBot.getInstance(), () -> {
+            Bukkit.getServer().getPluginManager().callEvent(event);
+        });
+
     }
 
 

@@ -69,7 +69,8 @@ public class BotAPI {
         FileConfiguration data = AmazingBot.getData().getConfig();
         for (String key : data.getConfigurationSection("").getKeys(false)){
             if (data.getString(key).equalsIgnoreCase(playerID.toString())){
-                return Long.parseLong(key);
+                return
+                        Long.parseLong(key);
             }
         }
         return userID;
