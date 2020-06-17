@@ -26,8 +26,9 @@ public class OnBind implements Listener {
         if (!AmazingBot.getInstance().getConfig().getBoolean("groups."+e.getGroupID()+".enable_bind")){
             return;
         }
-        if (e.getMsg().startsWith("/bd ")){
-            String userName = e.getMsg().substring(4);
+        String bd = AmazingBot.getInstance().getConfig().getString("bd");
+        if (e.getMsg().startsWith(bd)){
+            String userName = e.getMsg().substring(bd.length()).trim();
             if (Bukkit.getPlayerExact(userName) == null){
                 e.response("该玩家不在线!");
                 return;
@@ -52,11 +53,6 @@ public class OnBind implements Listener {
             return;
         }
         if (e.getMessage().startsWith("确认绑定 ")){
-            if (Bukkit.getPluginManager().getPlugin("AuthMe") != null) {
-                if (!AuthMe.getApi().isAuthenticated(e.getPlayer())){
-                    return;
-                }
-            }
             String user = e.getMessage().substring(5);
             Long userID = binds.get(uuid);
             if (!user.equalsIgnoreCase(String.valueOf(userID))){
