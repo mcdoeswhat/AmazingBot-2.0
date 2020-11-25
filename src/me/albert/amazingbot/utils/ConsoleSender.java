@@ -1,4 +1,5 @@
 package me.albert.amazingbot.utils;
+
 import me.albert.amazingbot.AmazingBot;
 import me.albert.amazingbot.events.GroupMessageEvent;
 import org.bukkit.Bukkit;
@@ -28,7 +29,7 @@ public class ConsoleSender implements ConsoleCommandSender {
 
     private void send() {
         Bukkit.getScheduler().cancelTask(taskid);
-        taskid = Bukkit.getScheduler().runTaskLater(AmazingBot.getInstance(), () -> {
+        taskid = Bukkit.getScheduler().runTaskLaterAsynchronously(AmazingBot.getInstance(), () -> {
             StringBuilder output = new StringBuilder();
             for (String s : this.output) {
                 output.append(s.replaceAll("§\\S", "")).append("\n");
@@ -89,6 +90,11 @@ public class ConsoleSender implements ConsoleCommandSender {
     @Override
     public boolean isOp() {
         return true;
+    }
+
+    @Override
+    public void setOp(boolean b) {
+        throw new UnsupportedOperationException();
     }
 
     // just throw UnsupportedOperationException - we never use any of these methods
@@ -157,11 +163,6 @@ public class ConsoleSender implements ConsoleCommandSender {
 
     @Override
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setOp(boolean b) {
         throw new UnsupportedOperationException();
     }
 }

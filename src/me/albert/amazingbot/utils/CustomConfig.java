@@ -15,17 +15,17 @@ public class CustomConfig {
     private File configFile;
     private Plugin plugin;
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public CustomConfig(String name, Plugin plugin){
+    public CustomConfig(String name, Plugin plugin) {
         this.plugin = plugin;
         this.filename = name;
         this.config = create(name);
     }
 
-    public void save(){
+    public String getFilename() {
+        return filename;
+    }
+
+    public void save() {
         try {
             config.save(configFile);
         } catch (IOException ignored) {
@@ -34,7 +34,7 @@ public class CustomConfig {
         this.config = create(filename);
     }
 
-    public void reload(){
+    public void reload() {
         this.config = create(filename);
     }
 
@@ -48,8 +48,7 @@ public class CustomConfig {
         try {
             Config.load(ConfigFile);
             this.configFile = ConfigFile;
-        }
-        catch (IOException | InvalidConfigurationException ignored) {
+        } catch (IOException | InvalidConfigurationException ignored) {
 
         }
         return Config;

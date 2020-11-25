@@ -1,10 +1,10 @@
 package me.albert.amazingbot;
 
 import me.albert.amazingbot.bot.Bot;
+import me.albert.amazingbot.database.MySQL;
 import me.albert.amazingbot.listeners.NewPlayer;
 import me.albert.amazingbot.listeners.OnBind;
 import me.albert.amazingbot.listeners.OnCommand;
-import me.albert.amazingbot.listeners.OnMessage;
 import me.albert.amazingbot.utils.CustomConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,40 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class AmazingBot extends JavaPlugin {
     private static AmazingBot instance;
     private static CustomConfig data;
-    @Override
-    public void onEnable(){
-        instance = this;
-        saveDefaultConfig();
-        Bot.start();
-        registerEvent(new OnMessage());
-        registerEvent(new OnCommand());
-        registerEvent(new NewPlayer());
-        registerEvent(new OnBind());
-        data = new CustomConfig("data.yml",this);
-        getLogger().info("Loaded");
-    }
-
-    private void registerEvent(Listener listener){
-        Bukkit.getServer().getPluginManager().registerEvents(listener,this);
-    }
-
-    @Override
-    public void onDisable(){
-        data.save();
-        Bot.stop();
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        reloadConfig();
-        data.reload();
-        sender.sendMessage("§a所有配置文件已经重新载入!");
-        Bot.stop();
-        if (!getConfig().getBoolean("auto_reconnect") || !Bot.getConnected()){
-            Bot.start();
-        }
-        return true;
-    }
+    private static CustomConfig mysqlSettings;
 
     public static AmazingBot getInstance() {
         return instance;
@@ -56,5 +23,48 @@ public class AmazingBot extends JavaPlugin {
 
     public static CustomConfig getData() {
         return data;
+    }
+
+    public static CustomConfig getMysqlSettings() {
+        return mysqlSettings;
+    }
+
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        saveDefaultConfig();
+        Bot.start();
+        registerEvent(new OnCommand());
+        registerEvent(new NewPlayer());
+        registerEvent(new OnBind());
+        data = new CustomConfig("data.yml", this);
+        mysqlSettings = new CustomConfig("mysql.yml", this);
+        if (mysqlSettings.getConfig().getBoolean("enable")) {
+            MySQL.setUP();
+        }
+        getLogger().info("Loaded");
+    }
+
+    private void registerEvent(Listener listener) {
+        Bukkit.getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+    @Override
+    public void onDisable() {
+        if (MySQL.ENABLED) {
+            MySQL.close();
+            return;
+        }
+        data.save();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        reloadConfig();
+        data.reload();
+        Bot.start();
+        sender.sendMessage("§a所有配置文件已经重新载入!");
+        return true;
     }
 }

@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class Utils {
 
-    public static boolean hasGroup(Long groupID){
+    public static boolean hasGroup(Long groupID) {
         ConfigurationSection section = AmazingBot.getInstance().getConfig().getConfigurationSection("groups");
-        for (String s : section.getKeys(false)){
-            if (s.equalsIgnoreCase(String.valueOf(groupID))){
+        for (String s : section.getKeys(false)) {
+            if (s.equalsIgnoreCase(String.valueOf(groupID))) {
                 return true;
             }
         }
